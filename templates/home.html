@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  <div class="row align-items-center" style="min-height: 80vh">
+    <form method="post" class="buttons col-md-6 mx-auto">
+      <h3 class="text-center mb-4">Let's chat!</h3>
+      <div class="form-group">
+
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          placeholder="Pick a name!"
+          name="name"
+          value="{{name}}"
+        />
+      </div>
+      <br>
+        <input type="text" class="form-control" placeholder="Room Code" name="code" value="{{code}}" />
+      <small class="text-secondary">Leave this blank if you want to create room!</small>
+      <br><br>
+      <div class="btn-group align-items-center" role="group">
+        <button type="submit" name="join" class="btn btn-warning btn-block">Join a Room</button>
+        <p class="pt-2 pl-3 pr-3">&nbsp; OR &nbsp; </p>
+        <button type="submit" name="create" class="create-btn btn btn-success btn-block">Create a Room</button>
+
+      </div>
+
+</div>
+
+
+
+
+
+      {% if error %}
+      <div class="alert alert-danger mt-3">
+        {{error}}
+      </div>
+      {% endif %}
+    </form>
+  </div>
+</div>
+{% endblock %}

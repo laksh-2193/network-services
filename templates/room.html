@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  <div class="row h-100">
+      <div class="message-box h-100">
+        <h2 class="text-center">Chat Room: {{code}}</h2>
+        <div class="messages" id="messages"></div>
+        <div class="inputs">
+          <input
+            type="text"
+            rows="3"
+            placeholder="Message"
+            name="message"
+            id="message"
+            class="form-control"
+            autofocus
+          />
+          <button type="button" name="send" id="send-btn" onClick="sendMessage()" class="btn btn-primary">
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+ var element = document.querySelector('#messages');
+
+    element.scrollTop = element.scrollHeight;
+
+  var socketio = io();
+
+  const messages = document.getElementById("messages");
+  const messageInput = document.getElementById("message"); // Get the message input element
+
+  const createMessage = (name, msg) => {
+    const content = `
+    <div class="text">
+        <span>
+            <strong>${name}</strong>: ${msg}
+        </span>
+        <span class="muted">
+            ${new Date().toLocaleString()}
+        </span>
+    </div>
+    `;
+    messages.innerHTML += content;
+  };
+
+  socketio.on("message", (data) => {
+    createMessage(data.name, data.message);
+  });
+
+  const sendMessage = () => {
+    const message = messageInput.value;
+    if (message.trim() === "") return; // Check if the message is empty or contains only spaces
+    socketio.emit("message", { data: message });
+    messageInput.value = "";
+  };
+
+  // Send a message when the Enter key is pressed
+  messageInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // Prevent the newline character from being added
+      sendMessage(); // Call the sendMessage function when Enter is pressed
+    }
+  });
+</script>
+
+{% for msg in messages %}
+<script type="text/javascript">
+  createMessage("{{msg.name}}", "{{msg.message}}");
+</script>
+{% endfor %} {% endblock %}
